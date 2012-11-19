@@ -106,7 +106,6 @@ module ProjectRazor
         description = options[:description]
         servers = options[:servers]
         certificate = options[:certificate]
-        puts "Certificate: #{options}"
         broker_version = options[:version]
         # check the values that were passed in
         servers = servers.flatten if servers.is_a? Array
