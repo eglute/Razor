@@ -20,6 +20,13 @@
   :description: New list of servers for the broker target
   :uuid_is: required
   :required: true
+- :name: :certificate
+  :default: false
+  :short_form: -c
+  :long_form: --certificate CERTIFICATE
+  :description: New full path to the Chef server certificate file
+  :uuid_is: not_allowed
+  :required: false
 - :name: :version
   :default: false
   :short_form: -v

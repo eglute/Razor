@@ -23,10 +23,14 @@ module ProjectRazor::BrokerPlugin
     def agent_hand_off(options = {})
       @options = options
       @options[:server] = @servers.first
-      @options[:ca_server] = @options[:server]
       @options[:version] = @broker_version
       @options[:puppetagent_certname] ||= @options[:uuid].base62_decode.to_s(16)
-      return false unless validate_options(@options, [:username, :password, :server, :ca_server, :puppetagent_certname, :ipaddress])
+      file = File.open(certificate)
+      cert = file.read
+      file.close
+      logger.debug("cert content: #{cert}")
+      @options[:certificate] = cert
+      return false unless validate_options(@options, [:username, :password, :server, :puppetagent_certname, :ipaddress, :certificate])
       @chef_script = compile_template
       init_agent(options)
     end
@@ -49,9 +53,9 @@ module ProjectRazor::BrokerPlugin
       # set return to fail by default
       ret = :broker_fail
       # set to wait
-      ret = :broker_wait if @run_script_str.include?("Exiting; no certificate found and waitforcert is disabled")
-      # set to success (this meant autosign was likely on)
-      ret = :broker_success if @run_script_str.include?("Report handlers compelete")
+      ret = :broker_wait if @run_script_str.include?("Thank you for installing Chef")
+      # set to success (this meant node registered with the chef server)
+      ret = :broker_success if @run_script_str.include?("Chef Run complete")
       ret
     end
 

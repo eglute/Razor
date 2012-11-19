@@ -105,6 +105,8 @@ module ProjectRazor
         name = options[:name]
         description = options[:description]
         servers = options[:servers]
+        certificate = options[:certificate]
+        puts "Certificate: #{options}"
         broker_version = options[:version]
         # check the values that were passed in
         servers = servers.flatten if servers.is_a? Array
@@ -116,6 +118,7 @@ module ProjectRazor
         broker.name             = name
         broker.user_description = description
         broker.servers          = servers
+        broker.certificate      = certificate
         broker.broker_version   = broker_version
         broker.is_template      = false
         # persist that broker, and print the result (or raise an error if cannot persist it)
@@ -141,6 +144,7 @@ module ProjectRazor
         plugin = options[:plugin]
         name = options[:name]
         description = options[:description]
+        certificate = options[:certificate]
         servers = options[:servers]
         broker_version = options[:version]
         # check the values that were passed in
@@ -153,6 +157,7 @@ module ProjectRazor
         broker.name             = name if name
         broker.user_description = description if description
         broker.servers          = servers if servers
+        broker.certificate      = certificate if certificate
         broker.broker_version   = broker_version if broker_version
         broker.is_template      = false
         raise ProjectRazor::Error::Slice::CouldNotUpdate, "Could not update Broker Target [#{broker.uuid}]" unless broker.update_self
