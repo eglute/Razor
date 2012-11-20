@@ -26,8 +26,20 @@ EOFCHEFVALIDATION
 
 }
 
+function insert_custom_attributes() {
+    <% if @options[:meta] %> 
+    echo Installing custom node attributes
+    cat >/etc/chef/razor_node_attributes.json <<EOFNODEATTRIBUTES
+<%= @options[:meta] %>
+EOFNODEATTRIBUTES
+    chef-client -j /etc/chef/razor_node_attributes.json 
+    <% end %>
+
+}
+
 function provision_chef() {
     install_chef
+    insert_custom_attributes
     echo Chef Success!
  
     exit 0

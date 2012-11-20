@@ -3,6 +3,7 @@
 # TODO - Make broker properties open rather than rigid
 require "erb"
 require "net/ssh"
+require "json"
 
 # Root namespace for ProjectRazor
 module ProjectRazor::BrokerPlugin
@@ -30,6 +31,11 @@ module ProjectRazor::BrokerPlugin
       file.close
       logger.debug("cert content: #{cert}")
       @options[:certificate] = cert
+      @options[:meta] = nil
+      if @options[:metadata] 
+        @options[:meta] = @options[:metadata].to_json.to_s.gsub('"', '"\"')
+        logger.debug "metadata json file: #{@options[:meta]}"
+      end
       return false unless validate_options(@options, [:username, :password, :server, :puppetagent_certname, :ipaddress, :certificate])
       @chef_script = compile_template
       init_agent(options)
